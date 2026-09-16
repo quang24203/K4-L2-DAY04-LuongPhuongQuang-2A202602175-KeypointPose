@@ -1,4 +1,4 @@
-# Mini guideline - nhóm: ______  |  người gán: ______  |  ngày: ______
+# Mini guideline - nhóm: Cá nhân  |  người gán: ______  |  ngày: ______
 
 > Điền file này **trong lúc** gán nhãn, không phải sau khi xong. Mỗi lần bạn dừng lại
 > hơn 10 giây để phân vân, đó là một dòng phải ghi vào đây.
@@ -16,12 +16,12 @@
 
 | Tình huống | Luật nhóm bạn chọn | Vì sao |
 | --- | --- | --- |
-| Hông của người mặc quần áo dài |Ước lượng vị trí tâm khớp hông theo giải phẫu cơ thể, đặt điểm và chọn trạng thái Occluded (v=1). | Lớp quần áo dài/rộng che khuất cấu trúc trực tiếp của tâm khớp, nhưng dựa vào tỷ lệ cơ thể (gióng từ vai, đầu gối) ta vẫn suy ra được vị trí. Tuân theo luật: "Bị che nhưng vẫn suy ra vị trí -> Vẫn đặt điểm ước lượng, bật Occluded|
-| Tai bị tóc hoặc mũ bảo hiểm che một phần |Ước lượng vị trí lỗ tai (dưới lớp tóc/mũ), đặt điểm và chọn trạng thái Occluded (v=1) |Dù bị lấp một phần hay toàn bộ, dựa vào khung xương hàm và vị trí mắt/mũi, ta hoàn toàn có thể đoán được chính xác tai nằm ở đâu. Áp dụng luật "bị che nhưng vẫn suy ra vị trí|
-| Người bị cắt ở mép ảnh (chỉ thấy từ hông trở lên) |Các điểm bị cắt ra ngoài mép ảnh bắt buộc gạt sang trạng thái Outside (v=0) và không đặt tọa độ. Không được xóa keypoint |Quy tắc bắt buộc: "Mỗi người nhìn thấy là một skeleton và luôn có đủ 17 keypoint; không xoá keypoint khó". Khớp đã nằm ngoài khung hình thì dùng Outside (v=0) để bảo toàn cấu trúc 17 điểm của file xuất ra |
-| Cổ tay nằm sau tay lái / sau thân mình | Ước lượng vị trí cổ tay dựa theo đường thẳng của cẳng tay, đặt điểm và chọn trạng thái Occluded (v=1).|Việc cổ tay bị vật thể (tay lái) hoặc cơ thể người khác che khuất cũng được tính là occlusion. Vẫn có cơ sở để suy ra vị trí nên phải đặt điểm ước lượng (v=1 |
-| Hai người chồng lên nhau |Tạo đủ 2 skeleton riêng biệt. Các khớp của người đứng sau bị người đứng trước che khuất thì đặt điểm ước lượng và chọn Occluded (v=1). | Mỗi người là một đối tượng độc lập và "luôn có đủ 17 keypoint". Cơ thể người phía trước đóng vai trò như vật cản che khuất, người phía sau vẫn phải được gán đủ điểm dựa trên suy luận giải phẫu|
-| Người nhỏ đến mức nào thì không gán nữa |Gán mọi người thuộc phạm vi trong ảnh. Chỉ bỏ qua khi người quá nhỏ hoặc quá mờ đến mức không thể phân biệt được hình dáng cơ thể (không thể suy luận nổi vị trí đầu, vai, hông) |Bài lab yêu cầu "Gán mọi người thuộc phạm vi trong ảnh". Tuy nhiên, nếu số lượng pixel quá ít khiến việc ước lượng giải phẫu trở thành "đoán mò vô căn cứ", việc cố gán sẽ sinh ra nhiễu (noise data) làm giảm chất lượng mô hình |
+| Hông của người mặc quần áo dài | Ước lượng tâm khớp theo giải phẫu cơ thể, đặt điểm và chọn `Occluded` (`v=1`). | Quần áo che cấu trúc trực tiếp, nhưng vai, thân và đầu gối vẫn giúp suy ra vị trí hông. |
+| Tai bị tóc hoặc mũ che | Ước lượng vị trí tai theo mắt, mũi và đường hàm, đặt điểm và chọn `Occluded` (`v=1`). | Tai bị che nhưng vẫn nằm trong khung ảnh nên không được dùng `Outside`. |
+| Người bị cắt ở mép ảnh | Với khớp đã ra ngoài mép, chọn `Outside` (`v=0`) và không đặt tọa độ. | `v=0` chỉ dùng khi khớp không còn pixel nào trong khung; không xóa keypoint khỏi skeleton. |
+| Cổ tay nằm sau tay lái hoặc thân mình | Ước lượng theo hướng cẳng tay, đặt điểm và chọn `Occluded` (`v=1`). | Vật thể hoặc người khác che cổ tay, nhưng vị trí vẫn còn trong ảnh và có thể suy ra. |
+| Hai người chồng lên nhau | Tạo một skeleton riêng cho mỗi người; khớp bị che của người phía sau vẫn đặt điểm và chọn `Occluded` (`v=1`). | Mỗi người là một đối tượng độc lập, không gộp khớp của người này sang người kia. |
+| Người rất nhỏ hoặc quá mờ | Gán nếu còn phân biệt được đầu, vai và thân; chỉ bỏ qua khi không thể suy luận vị trí khớp một cách có căn cứ. | Gán mò khi ảnh không đủ thông tin sẽ tạo nhiễu cho dữ liệu huấn luyện. |
 
 Với mỗi luật, chèn **một ảnh mẫu** (screenshot từ CVAT) thay vì chỉ viết một câu.
 Slide 12 nói rõ: khớp không có bề mặt nhìn thấy được thì phải có ảnh mẫu, không phải
@@ -29,29 +29,28 @@ một câu văn chung chung.
 
 ## 3. Ba ca mơ hồ đã gặp (bắt buộc, ghi ít nhất 3)
 
-### Ca 1 - ảnh `______`, người thứ `___`, khớp `______`
+### Ca 1 - ảnh `train_06`, người đứng giữa, khớp `left_hip`
 
-- Mơ hồ ở chỗ nào:
-- Bạn quyết thế nào:
-- Vì sao:
-- Nếu người khác quyết ngược lại thì model học sai cái gì:
+- Mơ hồ ở chỗ nào: Hông bị quần áo che gần hết, không thấy rõ bề mặt khớp.
+- Bạn quyết thế nào: Đặt điểm theo đường nối vai - gối và chọn `Occluded` (`v=1`).
+- Vì sao: Hông vẫn nằm trong khung ảnh và vị trí có thể suy ra từ hình dáng cơ thể.
+- Nếu người khác quyết ngược lại thì model học sai cái gì: Model sẽ học rằng hông bị quần áo che thì không có khớp.
 
-### Ca 2 - ảnh `______`, người thứ `___`, khớp `______`
+### Ca 2 - ảnh `train_01`, người #1, khớp `left_ear` và `right_ear`
 
-- Mơ hồ ở chỗ nào:
-- Bạn quyết thế nào:
-- Vì sao:
-- Nếu người khác quyết ngược lại thì model học sai cái gì:
+- Mơ hồ ở chỗ nào: Tai bị tóc hoặc góc chụp che, nên khó phân biệt `v=1` và `v=2`.
+- Bạn quyết thế nào: Giữ điểm ở vị trí giải phẫu ước lượng và chọn `Occluded` (`v=1`) khi tai còn trong ảnh.
+- Vì sao: Mắt, mũi và đường hàm vẫn giúp xác định vị trí tai.
+- Nếu người khác quyết ngược lại thì model học sai cái gì: Model sẽ học sai visibility của tai và có thể bỏ qua tai trong các ảnh bị tóc che.
 
-### Ca 3 - ảnh `______`, người thứ `___`, khớp `______`
+### Ca 3 - ảnh `train_03`, người #2, khớp `right_wrist` và `right_elbow`
 
-- Mơ hồ ở chỗ nào:
-- Bạn quyết thế nào:
-- Vì sao:
-- Nếu người khác quyết ngược lại thì model học sai cái gì:
+- Mơ hồ ở chỗ nào: Cánh tay bị che một phần nên cờ visibility có thể khác giữa hai cách gán.
+- Bạn quyết thế nào: Giữ điểm theo hướng cẳng tay và chọn `Occluded` (`v=1`).
+- Vì sao: Khớp vẫn ở trong khung ảnh, chỉ bị che chứ không ra ngoài mép.
+- Nếu người khác quyết ngược lại thì model học sai cái gì: Model sẽ học cờ visibility không nhất quán cho các khớp tay bị che.
 
 ## 4. Sau khi so visibility report với bạn cùng nhóm
 
-- Khớp lệch `%v=1` nhiều nhất: `______` (bạn `___%` / họ `___%`)
-- Nguyên nhân là **guideline chưa rõ** hay **một trong hai bên gán sai**:
-- Luật mới bổ sung vào mục 2 sau khi thống nhất:
+- Không áp dụng: bài này được thực hiện cá nhân, không có thư mục nhãn của bạn cùng nhóm để đối chiếu.
+- Không có số liệu `%v=1` đối chiếu và không bổ sung luật nhóm mới.
