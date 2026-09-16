@@ -1,4 +1,4 @@
-Họ tên: ______   Nhóm: ______   Ngày: ______
+Họ tên: Lương Phương Quang   Nhóm: Cá nhân   Ngày: 16/09/2026
 
 # MỤC 1. Nhãn của tôi
 
